@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:delivery/screens/login_screen/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
@@ -23,7 +22,7 @@ class _SplachScreen2State extends State<SplachScreen2> {
     return SafeArea(
       child: Scaffold(
         body:
-            Center(child: Lottie.asset('assets/animation_json/delivery1.json')),
+            Center(child: Lottie.asset('assets/animation_json/delivery.json')),
       ),
     );
   }
@@ -32,12 +31,13 @@ class _SplachScreen2State extends State<SplachScreen2> {
     Timer(
       const Duration(seconds: 3),
       () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const LoginScreen(),
-          ),
-        );
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => const LoginScreen(),
+        //   ),
+        // );
+        Navigator.popAndPushNamed(context, 'Login');
       },
     );
     {}
