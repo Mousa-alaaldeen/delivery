@@ -117,13 +117,15 @@ class _LoginScreenState extends State<LoginScreen>
                 Align(
                   alignment: Alignment.topRight,
                   child: TextButton(
-                    child: const Text('Forgot possword?'),
+                    child: const Text('Forgot possword?',),
                     onPressed: () {},
                   ),
                 ),
+                const SizedBox(height: 30,),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: ElevatedButton(
+                    
                       style: ButtonStyle(
                         backgroundColor: MaterialStatePropertyAll(
                             Theme.of(context).colorScheme.primary),

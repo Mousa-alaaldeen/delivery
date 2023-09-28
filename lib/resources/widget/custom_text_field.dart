@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CustomTextField extends StatelessWidget {
   const CustomTextField({
@@ -14,6 +15,7 @@ class CustomTextField extends StatelessWidget {
     this.obscureText = false,
     this.errorText,
     this.validate,
+    this.inputFormatters,
   });
   final FormFieldValidator<String>? validate;
   final bool obscureText;
@@ -26,6 +28,7 @@ class CustomTextField extends StatelessWidget {
   final Widget? suffixIcon;
   final TextEditingController? controller;
   final void Function(String?)? onSaved;
+  final List<TextInputFormatter>? inputFormatters;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -58,9 +61,7 @@ class CustomTextField extends StatelessWidget {
             errorBorder: buildBorder(Theme.of(context).colorScheme.error),
             filled: true,
             fillColor: Colors.grey.withOpacity(0.2)),
-        // inputFormatters: [
-        //   FilteringTextInputFormatter.digitsOnly,
-        // ],
+        inputFormatters: inputFormatters,
         // textCapitalization: TextCapitalization.words ,      الحروف كبتل
       ),
     );

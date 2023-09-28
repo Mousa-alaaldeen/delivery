@@ -22,10 +22,10 @@ class MyApp extends StatelessWidget {
         ),
         // brightness: Brightness.light,
       ),
-      home: const SplachScreen2(),
-      initialRoute: 'Login',
+      home:  const SplachScreen2(),
+      initialRoute: 'SplachScreen2',
       routes: {
-        'SplachScreen2': (context) => const SplachScreen2(),
+        '': (context) => const SplachScreen2(),
         'Login': (context) => const LoginScreen(),
         'Welcome': (context) => const WelcomeScreen(),
         'Registeer': (context) => const RegisteerScreen(),

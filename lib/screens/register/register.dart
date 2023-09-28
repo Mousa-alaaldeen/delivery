@@ -1,4 +1,10 @@
+// ignore_for_file: unused_field
+
 import 'package:flutter/material.dart';
+
+import '../../resources/widget/custom_text_field.dart';
+
+/// Flutter code sample for [ScaleTransition].
 
 class RegisteerScreen extends StatefulWidget {
   const RegisteerScreen({super.key});
@@ -7,44 +13,182 @@ class RegisteerScreen extends StatefulWidget {
   State<RegisteerScreen> createState() => _RegisteerScreenState();
 }
 
-class _RegisteerScreenState extends State<RegisteerScreen> {
+class _RegisteerScreenState extends State<RegisteerScreen>
+    with TickerProviderStateMixin {
+  final TextEditingController userController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  FocusNode focusNodeUser = FocusNode();
+  final String _errorTextUser = '';
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
+  FocusNode focusNodePassword = FocusNode();
+  final String _errorTextPassword = '';
+  bool _obscureText = true;
+  var formKey = GlobalKey<FormState>();
+  late final AnimationController _controller = AnimationController(
+    duration: const Duration(seconds: 2),
+    vsync: this,
+  )..repeat(reverse: true);
+  late final Animation<double> _animation = CurvedAnimation(
+    parent: _controller,
+    curve: Curves.fastOutSlowIn,
+  );
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: SafeArea(
         child: Scaffold(
-      backgroundColor: Colors.amber,
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          children: [
-            CircleAvatar(
-              backgroundColor: const Color.fromARGB(255, 225, 225, 225),
-              child: IconButton(
-                onPressed: () {
-                  Navigator.popAndPushNamed(context, 'Login');
-                },
-                icon: const Icon(Icons.arrow_back_sharp),
-              ),
-            ),
-            Stack(
+          backgroundColor: Colors.white,
+          body: Form(
+            key: formKey,
+            child: ListView(
               children: [
-                Expanded(
-                  child: Positioned(
-                    
-                    child: Image.asset(
-                      'assets/images/logo.jpg',
-                      height: MediaQuery.of(context).size.height * 0.2,
-                      width: MediaQuery.of(context).size.width,
-                      fit: BoxFit.fill,
+                Padding(
+                  padding: const EdgeInsets.only(left: 10, top: 20),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.grey.shade200,
+                      child: IconButton(
+                          onPressed: () {
+                            Navigator.popAndPushNamed(context, 'Login');
+                          },
+                          icon: const Icon(
+                            Icons.navigate_before,
+                          )),
                     ),
                   ),
                 ),
-                const Text('mmmmmmmmmm')
+                Center(
+                  child: Text(
+                    'Register',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 30,
+                        color: Theme.of(context).colorScheme.primary),
+                  ),
+                ),
+                const Center(
+                  child: Text(
+                    'Create your new account',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ),
+                const SizedBox(height: 10,),
+              
+                CustomTextField(
+                  validate: (String? value) {
+                    if (value!.isEmpty) {
+                      return 'please enter your user name ';
+                    }
+                    return null;
+                  },
+                  controller: userController,
+                  height: 'user Name',
+                  keyboardType: TextInputType.text,
+                  prefixIcon: Icon(Icons.person_2,
+                      color: Theme.of(context).colorScheme.primary),
+                ),
+                CustomTextField(
+                  validate: (value) {
+                    if (value!.isEmpty) {
+                      return 'please enter your email';
+                    }
+                    if (!RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$')
+                        .hasMatch(value)) {
+                      return 'Email is invalid';
+                    }
+                    return null; // لا يوجد خطأ
+                  },
+                  controller: emailController,
+                  height: 'email',
+                  keyboardType: TextInputType.emailAddress,
+                  prefixIcon: Icon(
+                    Icons.email,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+                CustomTextField(
+                  validate: (String? value) {
+                    if (value!.isEmpty) {
+                      return 'please enter your Passwords ';
+                    }
+                    return null;
+                  },
+                  obscureText: _obscureText,
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      Icons.remove_red_eye,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _obscureText = !_obscureText;
+                      });
+                    },
+                  ),
+                  controller: passwordController,
+                  height: 'password',
+                  keyboardType: TextInputType.text,
+                  prefixIcon: Icon(Icons.password,
+                      color: Theme.of(context).colorScheme.primary),
+                ),
+                CustomTextField(
+                  validate: (String? value) {
+                    if (value!.isEmpty) {
+                      return 'please enter your Confirm Passwords ';
+                    }
+                    if (value != passwordController.text) {
+                      return 'Passwords do not match';
+                    }
+                    return null;
+                  },
+                  obscureText: true,
+                  controller: confirmPasswordController,
+                  height: 'Confirm password',
+                  keyboardType: TextInputType.text,
+                  prefixIcon: Icon(Icons.password,
+                      color: Theme.of(context).colorScheme.primary),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
+                  child: ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStatePropertyAll(
+                            Theme.of(context).colorScheme.primary),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          if (formKey.currentState!.validate()) {}
+                        });
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text(
+                          'Sing up',
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              fontSize: 16),
+                        ),
+                      )),
+                ),
               ],
-            )
-          ],
+            ),
+          ),
         ),
       ),
-    ));
+    );
   }
 }
