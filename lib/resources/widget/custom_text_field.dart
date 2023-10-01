@@ -10,6 +10,7 @@ class CustomTextField extends StatelessWidget {
     required this.controller,
     required this.keyboardType,
     this.onTap,
+    this.maxLength,
     this.prefixIcon,
     this.suffixIcon,
     this.obscureText = false,
@@ -22,7 +23,8 @@ class CustomTextField extends StatelessWidget {
   final String height;
   final String? errorText;
   final Function()? onTap;
-  final int maxLines;
+  final int? maxLines;
+  final int? maxLength;
   final TextInputType? keyboardType;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
@@ -44,6 +46,8 @@ class CustomTextField extends StatelessWidget {
         onSaved: onSaved,
         validator: validate,
         maxLines: maxLines,
+        maxLength: maxLength,
+
         cursorColor: Colors.black,
         decoration: InputDecoration(
             errorText: errorText,
@@ -69,7 +73,7 @@ class CustomTextField extends StatelessWidget {
 
   OutlineInputBorder buildBorder([Color? color]) {
     return OutlineInputBorder(
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(20),
       borderSide: BorderSide(color: color ?? Colors.white),
     );
   }

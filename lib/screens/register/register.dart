@@ -25,6 +25,7 @@ class _RegisteerScreenState extends State<RegisteerScreen>
   FocusNode focusNodePassword = FocusNode();
   final String _errorTextPassword = '';
   bool _obscureText = true;
+  IconData iconData = Icons.remove_red_eye;
   var formKey = GlobalKey<FormState>();
   late final AnimationController _controller = AnimationController(
     duration: const Duration(seconds: 2),
@@ -85,8 +86,9 @@ class _RegisteerScreenState extends State<RegisteerScreen>
                     style: TextStyle(color: Colors.grey),
                   ),
                 ),
-                const SizedBox(height: 10,),
-              
+                const SizedBox(
+                  height: 10,
+                ),
                 CustomTextField(
                   validate: (String? value) {
                     if (value!.isEmpty) {
@@ -124,21 +126,28 @@ class _RegisteerScreenState extends State<RegisteerScreen>
                     if (value!.isEmpty) {
                       return 'please enter your Passwords ';
                     }
+                    if (value.toString().length < 8) {
+                      return 'Passwords length greater or equal to 8';
+                    }
                     return null;
                   },
                   obscureText: _obscureText,
                   suffixIcon: IconButton(
                     icon: Icon(
-                      Icons.remove_red_eye,
+                      iconData,
                       color: Theme.of(context).colorScheme.primary,
                     ),
                     onPressed: () {
                       setState(() {
                         _obscureText = !_obscureText;
+                        iconData = _obscureText
+                            ? iconData = Icons.remove_red_eye
+                            : Icons.visibility_off_outlined;
                       });
                     },
                   ),
                   controller: passwordController,
+                  maxLength: 15,
                   height: 'password',
                   keyboardType: TextInputType.text,
                   prefixIcon: Icon(Icons.password,
@@ -171,6 +180,8 @@ class _RegisteerScreenState extends State<RegisteerScreen>
                       ),
                       onPressed: () {
                         setState(() {
+                          focusNodeUser.requestFocus();
+                          focusNodePassword.requestFocus();
                           if (formKey.currentState!.validate()) {}
                         });
                       },

@@ -1,9 +1,10 @@
 // ignore_for_file: unused_field
 
 import 'package:flutter/material.dart';
-import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 
 import '../../resources/widget/custom_text_field.dart';
+import 'login_image.dart';
+import 'package:http/http.dart' as http;
 
 /// Flutter code sample for [ScaleTransition].
 
@@ -23,6 +24,7 @@ class _LoginScreenState extends State<LoginScreen>
   FocusNode focusNodePassword = FocusNode();
   final String _errorTextPassword = '';
   bool _obscureText = true;
+  IconData iconData = Icons.remove_red_eye;
   var formKey = GlobalKey<FormState>();
   late final AnimationController _controller = AnimationController(
     duration: const Duration(seconds: 2),
@@ -52,15 +54,7 @@ class _LoginScreenState extends State<LoginScreen>
             key: formKey,
             child: ListView(
               children: [
-                ClipPath(
-                  clipper: WaveClipperOne(),
-                  child: Image.asset(
-                    'assets/images/Welcome.jpg',
-                    height: MediaQuery.of(context).size.height * 0.3,
-                    width: 2000,
-                    fit: BoxFit.fill,
-                  ),
-                ),
+                const LoginImage(),
                 Center(
                   child: Text(
                     'Welcome back',
@@ -99,12 +93,15 @@ class _LoginScreenState extends State<LoginScreen>
                   obscureText: _obscureText,
                   suffixIcon: IconButton(
                     icon: Icon(
-                      Icons.remove_red_eye,
+                      iconData,
                       color: Theme.of(context).colorScheme.primary,
                     ),
                     onPressed: () {
                       setState(() {
                         _obscureText = !_obscureText;
+                        iconData = _obscureText
+                            ? iconData = Icons.remove_red_eye
+                            : Icons.visibility_off_outlined;
                       });
                     },
                   ),
@@ -117,22 +114,25 @@ class _LoginScreenState extends State<LoginScreen>
                 Align(
                   alignment: Alignment.topRight,
                   child: TextButton(
-                    child: const Text('Forgot possword?',),
+                    child: const Text(
+                      'Forgot possword?',
+                    ),
                     onPressed: () {},
                   ),
                 ),
-                const SizedBox(height: 30,),
+                const SizedBox(
+                  height: 30,
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: ElevatedButton(
-                    
                       style: ButtonStyle(
                         backgroundColor: MaterialStatePropertyAll(
                             Theme.of(context).colorScheme.primary),
                       ),
                       onPressed: () {
                         setState(() {
-                          if (formKey.currentState!.validate()) {}
+                          checkErrors();
                         });
                       },
                       child: Padding(
@@ -168,12 +168,23 @@ class _LoginScreenState extends State<LoginScreen>
                       ),
                     ],
                   ),
-                )
+                ),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  Future<void> checkErrors() async {
+    focusNodeUser.requestFocus();
+    focusNodePassword.requestFocus();
+    if (formKey.currentState!.validate()) {
+      var url = Uri.parse("https://reqres.in/api/login");
+      var responde = await http.post(url,
+          body: {"email": "eve.holt@reqres.in", "password": "cityslicka"},
+          headers: {"Content-Type": "application/json"});
+    }
   }
 }
