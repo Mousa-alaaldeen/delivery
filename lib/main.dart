@@ -1,3 +1,4 @@
+import 'package:delivery/layout/layout_screen.dart';
 import 'package:delivery/screens/login/login_screen.dart';
 import 'package:delivery/screens/register/register.dart';
 import 'package:delivery/screens/splach_screen/splach_screen2.dart';
@@ -22,13 +23,14 @@ class MyApp extends StatelessWidget {
         ),
         // brightness: Brightness.light,
       ),
-      home:  const SplachScreen2(),
-      initialRoute: 'SplachScreen2',
+      home: const SplachScreen2(),
+      initialRoute: 'Layout',
       routes: {
-        '': (context) => const SplachScreen2(),
+        ' SplachScreen': (context) => const SplachScreen2(),
         'Login': (context) => const LoginScreen(),
         'Welcome': (context) => const WelcomeScreen(),
         'Registeer': (context) => const RegisteerScreen(),
+        'Layout': (context) => const LayoutScreen(),
       },
     );
   }
