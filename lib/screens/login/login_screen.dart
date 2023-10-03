@@ -1,6 +1,10 @@
-// ignore_for_file: unused_field
+// ignore_for_file: unused_field, avoid_print
 
+import 'dart:convert';
+
+import 'package:delivery/resources/http.dart';
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 import '../../resources/widget/custom_text_field.dart';
 import 'login_image.dart';
@@ -131,8 +135,42 @@ class _LoginScreenState extends State<LoginScreen>
                             Theme.of(context).colorScheme.primary),
                       ),
                       onPressed: () {
-                        setState(() {
-                          checkErrors();
+                        setState(() async {
+                          bool result =
+                              await InternetConnectionChecker().hasConnection;
+                          if (result == true) {
+                            print('YAY! Free cute dog pics!');
+                            await signIn();
+                          } else {
+                            showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  scrollable: true,
+                                  title: const Text('No internet :( Reason:'),
+                                  content: const Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      SizedBox(height: 16),
+                                      Icon(
+                                        Icons.wifi_off,
+                                        size: 50,
+                                      ),
+                                    ],
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('ok'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
                         });
                       },
                       child: Padding(
@@ -177,14 +215,23 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
+  Future<void> signIn() async {
+    if (formKey.currentState!.validate()) {
+      var url = Uri.parse(Http.LOGIN_METHOD);
+      var response = await http.post(url,
+          body: jsonEncode({
+            "email": userController.text,
+            "password": passwordController.text
+          }),
+          headers: {"Content-Type": "application/json"});
+      print('Response status: ${response.statusCode}');
+      print('ll');
+      print('Response body: ${response.body}');
+    }
+  }
+
   Future<void> checkErrors() async {
     focusNodeUser.requestFocus();
     focusNodePassword.requestFocus();
-    if (formKey.currentState!.validate()) {
-      var url = Uri.parse("https://reqres.in/api/login");
-      var responde = await http.post(url,
-          body: {"email": "eve.holt@reqres.in", "password": "cityslicka"},
-          headers: {"Content-Type": "application/json"});
-    }
   }
 }

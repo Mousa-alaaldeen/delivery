@@ -1,4 +1,4 @@
-import 'package:delivery/screens/login_screen/login_screen.dart';
+import 'package:delivery/screens/login/login_screen.dart';
 import 'package:delivery/screens/register/register.dart';
 import 'package:delivery/screens/splach_screen/splach_screen2.dart';
 import 'package:delivery/screens/welcome_screen/welcome_screen.dart';
